@@ -1,0 +1,577 @@
+/* Full-device panel over the scratch card. */
+.panel {
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  background: var(--bg);
+}
+
+/* Visible part of the panel: never taller than the viewport, so the header
+   and tabs stay on screen and only the list scrolls. Positioned, so the
+   detail modal (absolute, inset 0) centres within what the user can see. */
+.frame {
+  position: relative;
+  height: min(100%, 100vh);
+  height: min(100%, 100dvh);
+  display: flex;
+  flex-direction: column;
+  padding: max(22px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) 0
+    max(20px, env(safe-area-inset-left));
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 4px;
+}
+
+.back {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: none;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.back:focus-visible,
+.tab:focus-visible,
+.chip:focus-visible,
+.copy:focus-visible,
+.retry:focus-visible,
+.logout:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.kicker {
+  margin: 0 0 2px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  color: oklch(from var(--accent) max(l, 0.72) c h);
+}
+
+.title {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.summary {
+  margin: 14px 4px 0;
+  font-size: 13.5px;
+  color: var(--text-muted);
+}
+
+.summary strong {
+  color: var(--text);
+}
+
+/* Segmented filter */
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin: 16px 0 14px;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--field);
+  border: 1px solid var(--border-soft);
+}
+
+.tab {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 38px;
+  padding: 0 8px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 12.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.tab[aria-selected="true"] {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+/* Full opacity: at 70% the count fell to ~3.5:1 on the track. */
+.count {
+  font-size: 10.5px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 2px 0 max(28px, calc(env(safe-area-inset-bottom) + 16px));
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  scrollbar-width: none;
+}
+
+.list::-webkit-scrollbar {
+  display: none;
+}
+
+/* Wallet row — Streaks reward-chip shape */
+.chip {
+  flex: none;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 15px;
+  border-radius: var(--r-md);
+  background: var(--sheet);
+  border: 1px solid var(--border-soft);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.chip:active {
+  background: var(--sheet-2);
+}
+
+.icon {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  font-size: 20px;
+  background: color-mix(in srgb, var(--accent) 16%, var(--field));
+}
+
+.icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Logos stay in colour so every prize is recognisable; used ones only
+   soften slightly so active coupons still lead. */
+.expired .icon img,
+.redeemed .icon img {
+  filter: saturate(0.6);
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.chipTitle {
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.code {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.expired .chipTitle,
+.redeemed .chipTitle {
+  color: color-mix(in srgb, var(--text) 82%, transparent);
+}
+
+.meta {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.status {
+  flex: none;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.s_active {
+  color: oklch(from var(--accent) max(l, 0.72) c h);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.s_redeemed {
+  color: #2fd07f;
+  background: rgba(47, 208, 127, 0.12);
+}
+
+.s_expired {
+  color: #ff9aa6;
+  background: rgba(255, 92, 112, 0.14);
+}
+
+.skeleton {
+  flex: none;
+  height: 74px;
+  border-radius: var(--r-md);
+  background: linear-gradient(100deg, var(--sheet) 30%, var(--sheet-2) 50%, var(--sheet) 70%) 0 0 / 300% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -150% 0;
+  }
+}
+
+.empty {
+  margin-top: 48px;
+  text-align: center;
+  padding: 0 24px;
+}
+
+.emptyIcon {
+  display: inline-grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 14px;
+  border-radius: 50%;
+  font-size: 28px;
+  background: color-mix(in srgb, var(--accent) 12%, var(--field));
+}
+
+.emptyTitle {
+  margin: 0 0 6px;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.emptyText {
+  margin: 0 auto;
+  max-width: 250px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.retry {
+  margin-top: 16px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* ---------- Detail modal (Streaks reward modal) ---------- */
+/* Scrolls inside the card when the viewport is too short for QR + facts
+   (e.g. 320×568) instead of clipping the Done button off-screen. Height is
+   viewport minus the overlay (48px) and card (56px) padding. */
+.detail {
+  text-align: center;
+  max-height: calc(100vh - 104px);
+  max-height: calc(100dvh - 104px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.detail::-webkit-scrollbar {
+  display: none;
+}
+
+.detailIcon {
+  width: 84px;
+  height: 84px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  font-size: 32px;
+  background: var(--accent);
+  border: 4px solid #fff;
+}
+
+.detailIcon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.faded img {
+  filter: saturate(0.6);
+}
+
+.detailKicker {
+  margin: 0;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.k_active {
+  color: oklch(from var(--accent) max(l, 0.72) c h);
+}
+
+.k_redeemed {
+  color: #2fd07f;
+}
+
+.k_expired {
+  color: #ff9aa6;
+}
+
+.detailTitle {
+  margin: 6px 0 2px;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.detailProduct {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--text-muted);
+}
+
+.detailNote {
+  margin: 12px auto 18px;
+  max-width: 250px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+/* White tile: scanners need dark-on-light whatever the theme */
+.qr {
+  width: fit-content;
+  margin: 0 auto 14px;
+  padding: 10px;
+  border-radius: var(--r-md);
+  background: #fff;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 35%, transparent), 0 18px 40px -18px rgba(0, 0, 0, 0.8);
+}
+
+.qr svg {
+  border-radius: 4px;
+}
+
+/* Perforated code ticket — notches cut with the card colour */
+.ticket {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 15px 16px;
+  margin-bottom: 16px;
+  border-radius: var(--r-md);
+  border: 1.5px dashed color-mix(in srgb, var(--accent) 55%, transparent);
+  background: color-mix(in srgb, var(--accent) 5%, transparent);
+}
+
+.ticket::before,
+.ticket::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  margin-top: -7px;
+  border-radius: 50%;
+  background: var(--sheet);
+}
+
+.ticket::before {
+  left: -8px;
+}
+
+.ticket::after {
+  right: -8px;
+}
+
+.ticketCode {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+  color: var(--text);
+}
+
+.ticketDead {
+  border-color: var(--border);
+  background: transparent;
+}
+
+.ticketDead .ticketCode {
+  color: var(--text-muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
+  text-decoration-color: color-mix(in srgb, var(--text-muted) 60%, transparent);
+}
+
+.copy {
+  flex: none;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: none;
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  color: oklch(from var(--accent) max(l, 0.72) c h);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.facts {
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+  margin: 0 0 20px;
+}
+
+.facts div {
+  min-width: 0;
+}
+
+.facts dt {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.facts dd {
+  margin: 3px 0 0;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.brandLogo {
+  flex: none;
+  margin-left: auto;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.brandLogo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.brandLogo > span {
+  line-height: 1;
+}
+
+/* Short phones: tighten the header and modal so content fits above the fold. */
+@media (max-height: 640px) {
+  .frame {
+    padding-top: max(14px, env(safe-area-inset-top));
+  }
+  .title {
+    font-size: 23px;
+  }
+  .summary {
+    margin-top: 10px;
+  }
+  .tabs {
+    margin: 12px 0 10px;
+  }
+  .qr svg {
+    width: 136px;
+    height: 136px;
+  }
+  .detailTitle {
+    font-size: 24px;
+  }
+  .detailNote {
+    margin: 8px auto 12px;
+  }
+}
+
+/* Narrow phones: keep the 4 tabs and the ticket code on one line. */
+@media (max-width: 360px) {
+  .tab {
+    padding: 0 5px;
+    font-size: 12px;
+    gap: 3px;
+  }
+  .ticketCode {
+    font-size: 18px;
+    letter-spacing: 0.08em;
+  }
+  /* The scrolling .detail clips horizontal overflow, so keep labels inside. */
+  .facts {
+    gap: 14px;
+  }
+  .facts dt {
+    letter-spacing: 0.06em;
+  }
+}
+
+/* Low-key sign-out at the very end of the list — muted, small, no chrome. */
+.logout {
+  flex: none;
+  align-self: center;
+  margin-top: 18px;
+  padding: 10px 14px;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  font-size: 12.5px;
+  font-weight: 600;
+  opacity: 0.7;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}

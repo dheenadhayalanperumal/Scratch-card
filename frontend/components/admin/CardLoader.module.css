@@ -1,0 +1,243 @@
+/* =====================================================================
+   CardLoader — a mini scratch card being scratched, as the admin's
+   loading state. A coin sweeps across the foil while the foil wipes away
+   to show the prize, then the cycle repeats.
+   ===================================================================== */
+
+.fullscreen {
+  min-height: 100dvh;
+  width: 100%;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr);
+  justify-items: center;
+  padding: 40px 24px;
+}
+.fullscreen .stage {
+  grid-row: 2;
+}
+.fullscreen .caption {
+  grid-row: 3;
+  align-self: start;
+  margin-top: 30px;
+}
+
+.inline {
+  display: grid;
+  justify-items: center;
+  gap: 22px;
+  padding: 44px 24px;
+}
+
+/* ---------- card ---------- */
+.stage {
+  position: relative;
+  width: var(--card-size, 120px);
+  height: calc(var(--card-size, 120px) * 0.8);
+  display: grid;
+  place-items: center;
+  /* Reveal the whole assembly rather than popping it in on first paint. */
+  animation: rise 0.5s cubic-bezier(0.16, 0.84, 0.44, 1) both;
+}
+
+/* Static cast shadow. Deliberately a pseudo-element rather than a CSS filter
+   on the card: a filter wrapping the animated foil would be re-rasterised every
+   frame, on the main thread, during the busiest part of boot. */
+.stage::after {
+  content: "";
+  position: absolute;
+  inset: 6% 6% -2%;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.62);
+  filter: blur(13px);
+  z-index: -1;
+}
+
+/* Warm bloom behind the card. Animates opacity only — scaling a blurred
+   element forces the blur to be recomputed each frame. */
+.glow {
+  /* Retired: no glow on UI chrome. Kept as a no-op so the markup stays valid. */
+  display: none;
+  position: absolute;
+  inset: -34%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 46%,
+    rgba(240, 88, 142, 0.34),
+    rgba(247, 165, 59, 0.14) 46%,
+    transparent 68%
+  );
+  filter: blur(14px);
+  animation: breathe 3.1s ease-in-out infinite;
+  will-change: opacity;
+}
+
+/* ---------- caption ---------- */
+.caption {
+  margin: 0;
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  animation: rise 0.5s cubic-bezier(0.16, 0.84, 0.44, 1) 0.12s both;
+}
+
+/* Matches the admin's eyebrow scale (.brandSub / .statLabel). */
+.captionText {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--text-muted, #8b8f9e);
+}
+
+/* Indeterminate sweep — deliberately not a progress bar, it never fills. */
+.track {
+  width: 132px;
+  height: 2px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+}
+.trackFill {
+  display: block;
+  width: 42%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+  animation: sweep 1.5s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- keyframes ---------- */
+@keyframes breathe {
+  0%, 100% { opacity: 0.5; }
+  50%      { opacity: 1; }
+}
+
+@keyframes sweep {
+  0%   { transform: translateX(-115%); }
+  100% { transform: translateX(340%); }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px) scale(0.97); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Short viewports (landscape phones, embedded frames): shrink the card so
+   the caption still fits without shoving it off centre. */
+@media (max-height: 520px) {
+  .fullscreen {
+    padding: 20px 24px;
+  }
+  .fullscreen .stage {
+    width: min(var(--card-size, 120px), 96px);
+    height: calc(min(var(--card-size, 120px), 96px) * 0.8);
+  }
+  .fullscreen .caption {
+    margin-top: 18px;
+  }
+}
+
+/* Motion-sensitive users still need a visible "working" signal. globals.css
+   forces `animation-duration: 0.001ms !important` on everything under this
+   media query, so the replacement pulse must re-assert its duration with
+   !important too — otherwise the loader is a completely static image. */
+@media (prefers-reduced-motion: reduce) {
+  .foil,
+  .coin,
+  .glow,
+  .stage,
+  .caption {
+    animation: none !important;
+  }
+  .glow {
+    opacity: 0.7;
+  }
+  .trackFill {
+    width: 100%;
+    animation-name: fade !important;
+    animation-duration: 1.8s !important;
+    animation-timing-function: ease-in-out !important;
+    animation-iteration-count: infinite !important;
+  }
+}
+
+@keyframes fade {
+  0%, 100% { opacity: 0.28; }
+  50%      { opacity: 1; }
+}
+
+/* ---------- mini card ---------- */
+.card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 6%;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #f7a53b, #f0588e);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.35);
+  overflow: hidden;
+}
+
+.prize {
+  width: 100%;
+  height: 100%;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  background: #141c2e;
+  color: #fff;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 800;
+  font-size: calc(var(--card-size, 120px) * 0.13);
+  letter-spacing: 0.04em;
+}
+
+/* Silver foil that wipes away left → right, then lays back down. */
+.foil {
+  position: absolute;
+  inset: 6%;
+  border-radius: 9px;
+  background:
+    repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.35) 0 6px, transparent 6px 16px),
+    linear-gradient(135deg, #e6e9ef, #9aa3b2 45%, #f2f4f8 60%, #8d96a6);
+  animation: wipe 2.4s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+}
+
+.coin {
+  position: absolute;
+  top: 30%;
+  left: 0;
+  font-size: calc(var(--card-size, 120px) * 0.2);
+  line-height: 1;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5));
+  animation: rub 2.4s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+}
+
+@keyframes wipe {
+  0%, 8%   { clip-path: inset(0 0 0 0); }
+  55%, 80% { clip-path: inset(0 0 0 100%); }
+  100%     { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes rub {
+  0%, 8%   { transform: translate(-10%, 0) rotate(-12deg); }
+  20%      { transform: translate(120%, 30%) rotate(10deg); }
+  32%      { transform: translate(220%, -20%) rotate(-10deg); }
+  44%      { transform: translate(330%, 25%) rotate(10deg); }
+  55%, 80% { transform: translate(430%, 0) rotate(-6deg); opacity: 1; }
+  90%      { opacity: 0; }
+  100%     { transform: translate(-10%, 0) rotate(-12deg); opacity: 0; }
+}

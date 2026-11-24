@@ -1,0 +1,22 @@
+.sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  background: linear-gradient(180deg, var(--sheet-2), var(--sheet));
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  padding: 16px 24px 30px;
+  box-shadow: var(--shadow-sheet);
+  animation: sheet-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.grabber {
+  display: block;
+  width: 42px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  margin: 0 auto 18px;
+}

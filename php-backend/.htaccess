@@ -1,0 +1,22 @@
+# Route every request that isn't a real file/folder to the front controller.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # cPanel/CGI often strips Authorization; copy it so admin Bearer tokens work.
+  RewriteCond %{HTTP:Authorization} .
+  RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ index.php [QSA,L]
+</IfModule>
+
+# Allow large logo / festival background data-URLs on hosts that honour these.
+# If festival photo saves fail, also raise these in cPanel → MultiPHP INI Editor.
+<IfModule mod_php.c>
+  php_value post_max_size 32M
+  php_value upload_max_filesize 32M
+</IfModule>
+
+# Never serve the config or source directly as text (defense in depth).
+<FilesMatch "\.(sql)$">
+  Require all denied
+</FilesMatch>

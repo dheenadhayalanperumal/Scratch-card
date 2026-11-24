@@ -1,0 +1,19 @@
+{
+  "name": "scratch-to-win-backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Node.js (Express) API for the Scratch-to-Win flow",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node --watch server.js",
+    "start": "node server.js",
+    "seed:demo": "node scripts/seed-demo.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mysql2": "^3.12.0"
+  }
+}

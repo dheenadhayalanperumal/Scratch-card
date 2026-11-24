@@ -1,0 +1,53 @@
+.top {
+  transition: opacity 0.4s ease, filter 0.4s ease;
+}
+
+.dimmed {
+  opacity: 0.4;
+  filter: blur(1px);
+  pointer-events: none;
+}
+
+.cardArea {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 0;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* When a sheet is open the card slides up so only its top peeks out */
+.cardPushed {
+  transform: translateY(-58px) scale(0.96);
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-top: 6px;
+}
+
+.tagline {
+  margin: 0;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.55;
+  /* Near-white with a soft shadow: the old muted grey washed out (and clashed)
+     over festival photo backgrounds. This reads on gradients, photos and the
+     default brand background alike. */
+  color: rgba(244, 245, 248, 0.92);
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.55), 0 0 3px rgba(0, 0, 0, 0.4);
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+.error {
+  margin: 0 auto;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #ef4444;
+  max-width: 280px;
+}

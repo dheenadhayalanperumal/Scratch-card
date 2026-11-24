@@ -1,0 +1,65 @@
+.btn {
+  --h: 58px;
+  width: 100%;
+  height: var(--h);
+  border: none;
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--on-accent, #fff);
+  /* One solid accent, no glow: the scratch card is the only thing that should shine. */
+  background: var(--accent, #f5b544);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: transform 0.18s ease, filter 0.18s ease, opacity 0.18s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* While loading the button is disabled, but keep its full color/gradient */
+.btn.loading {
+  cursor: progress;
+  opacity: 1;
+}
+
+/* Variants all share the accent fill; kept for API compatibility. */
+.cta,
+.ghost,
+.light {
+}
+
+.btn:not(:disabled):hover {
+  filter: brightness(1.06);
+}
+
+.icon {
+  display: inline-flex;
+  font-size: 18px;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2.5px solid color-mix(in srgb, var(--on-accent, #fff) 35%, transparent);
+  border-top-color: var(--on-accent, #fff);
+  animation: btn-spin 0.7s linear infinite;
+}
+
+@keyframes btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

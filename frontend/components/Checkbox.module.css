@@ -1,0 +1,43 @@
+.wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.box {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: var(--field);
+  display: grid;
+  place-items: center;
+  color: transparent;
+  transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+}
+
+.input:checked + .box {
+  background: var(--accent);
+  border-color: transparent;
+  color: var(--on-accent);
+}
+
+.input:focus-visible + .box {
+  box-shadow: 0 0 0 3px rgba(247, 165, 59, 0.25);
+}
+
+.text {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}

@@ -1,0 +1,17 @@
+{
+  "name": "scratch-to-win",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Scratch-to-Win reward flow — Next.js frontend + Node.js (Express) backend",
+  "scripts": {
+    "dev": "concurrently -n backend,frontend -c magenta,cyan \"npm:dev:backend\" \"npm:dev:frontend\"",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "start": "concurrently -n backend,frontend -c magenta,cyan \"npm --prefix backend start\" \"npm --prefix frontend start\"",
+    "install:all": "npm install && npm --prefix backend install && npm --prefix frontend install"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

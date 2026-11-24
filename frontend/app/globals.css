@@ -1,0 +1,198 @@
+:root {
+  /* Surfaces */
+  --bg: #07080c;
+  --bg-elevated: #0e1018;
+  --sheet: #13161f;
+  --sheet-2: #171a25;
+  --field: #0f121a;
+  --border: #262a38;
+  --border-soft: #1d2130;
+
+  /* Text */
+  --text: #f4f5f8;
+  --text-muted: #8b8f9e;
+  --text-dim: #5a5f70;
+
+  /* Brand */
+  --gold: #f5b544;
+  --pink: #f0588e;
+  --orange: #f7a53b;
+  --green: #21b85a;
+  --cta: linear-gradient(95deg, #f0588e 0%, #f47a4f 52%, #f7a53b 100%);
+
+  /* Radii & shadow */
+  --r-sm: 12px;
+  --r-md: 16px;
+  --r-lg: 22px;
+  --r-xl: 30px;
+  --shadow-cta: 0 14px 34px -10px rgba(240, 100, 110, 0.55);
+  --shadow-sheet: 0 -24px 60px -20px rgba(0, 0, 0, 0.8);
+
+  /* The single accent colour (admin "accent colour" overrides it per brand). */
+  --accent: #f5b544;
+  --on-accent: #16120a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  margin: 0;
+}
+
+button {
+  font-family: inherit;
+}
+
+input {
+  font-family: inherit;
+}
+
+/* Phone-frame canvas that all screens render into */
+.stage {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: #0e0407;
+}
+
+.device {
+  position: relative;
+  width: 100%;
+  max-width: 412px;
+  min-height: 860px;
+  border-radius: 38px;
+  overflow: hidden;
+  /* Flat surface by default — no gradient wash behind the title, no frame
+     border. A seasonal theme (page.js) sets --device-bg to a festive gradient. */
+  background: var(--device-bg, var(--bg));
+  box-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+  /* Collapse the legacy palette onto the one accent inside the customer app. */
+  --pink: var(--accent);
+  --gold: var(--accent);
+  --orange: var(--accent);
+  --cta: var(--accent);
+  /* Casino-room surfaces: warm oxblood instead of black (admin keeps :root). */
+  --bg: #1a0a0e;
+  --bg-elevated: #22101a;
+  --sheet: #241016;
+  --sheet-2: #2b131b;
+  --field: #160709;
+  --border: #3d1f27;
+  --border-soft: #2c161c;
+  --text-dim: #8a767c;
+}
+
+@media (max-width: 460px) {
+  .stage {
+    padding: 0;
+  }
+  .device {
+    max-width: 100%;
+    min-height: 100dvh;
+    border-radius: 0;
+  }
+}
+
+.screen {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 22px 26px;
+}
+
+/* Shared entrance animations */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  60% {
+    transform: scale(1.03);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Visually hidden, still announced by screen readers. */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.reveal > * {
+  animation: rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.reveal > *:nth-child(2) { animation-delay: 0.06s; }
+.reveal > *:nth-child(3) { animation-delay: 0.12s; }
+.reveal > *:nth-child(4) { animation-delay: 0.18s; }
+.reveal > *:nth-child(5) { animation-delay: 0.24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

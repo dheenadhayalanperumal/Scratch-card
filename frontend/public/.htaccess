@@ -1,0 +1,42 @@
+# =====================================================================
+# Apache / cPanel config for the Next.js static export.
+# Lives in frontend/public/ so `next build` copies it into out/, and it
+# therefore ships in every deploy. Upload it to public_html/ alongside
+# index.html — it does NOT apply to public_html/spinapi/, which has its
+# own .htaccess.
+# =====================================================================
+
+# --- The important one -----------------------------------------------
+# Next emits both index.html and index.txt (the React Server Component
+# payload) in each route directory. With Apache's MultiViews content
+# negotiation enabled — the cPanel default — a request for a route such as
+# /admin/branding/ can be answered with index.txt instead of index.html,
+# which renders raw payload text ('1:"$Sreact.fragment" ...') in the
+# browser. Turning negotiation off and naming the index file explicitly
+# makes Apache always serve the real page.
+Options -MultiViews
+DirectoryIndex index.html
+
+# --- Cache policy ----------------------------------------------------
+# Everything under _next/static is content-hashed, so it can be cached
+# forever; a new build produces new filenames. HTML and the .txt payloads
+# must not be cached, or visitors keep the previous build after an upload.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(js|css|woff2|woff)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.(html|txt)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+# --- Correct types for the export ------------------------------------
+<IfModule mod_mime.c>
+  AddType application/javascript .js
+  AddType text/css .css
+  AddType font/woff2 .woff2
+  AddType image/svg+xml .svg
+</IfModule>
+
+# Serve the 404 page Next generated rather than Apache's default.
+ErrorDocument 404 /404.html

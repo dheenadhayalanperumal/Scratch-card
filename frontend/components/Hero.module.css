@@ -1,0 +1,82 @@
+/* Motion here is painted from lib/clock — no CSS transitions. */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  padding: 4px 2px 0;
+}
+
+.kicker {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* A short accent rule leads the kicker instead of a pill badge. */
+.kicker::before {
+  content: "";
+  width: 22px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+.title {
+  /* Full width: the reel line's text is absolutely positioned, so without this
+     the box shrink-wraps to "Scratch & win" and clips longer prizes. */
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  /* stretch, not center: the reel line's text is absolutely positioned, so a
+     shrink-wrapped line collapses to 0 width and overflow:hidden clips the
+     prize away entirely. Centering happens via text-align + the slot rules. */
+  align-items: stretch;
+  text-align: center;
+  font-size: 38px;
+  line-height: 1.08;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+
+/* Each line is its own mask so text can wipe/roll in without fading. */
+.line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+}
+
+.line > span {
+  display: block;
+}
+
+.reel > span {
+  position: relative;
+  height: 1.12em;
+}
+
+.slot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+  bottom: 0;
+  white-space: nowrap;
+  line-height: 1.12;
+  color: var(--accent);
+}
+
+/* Mid-scratch the reel flickers through prizes in the neutral text colour… */
+.rolling {
+  color: var(--text-muted);
+}
+
+/* …and snaps to the accent once the card is revealed. */
+.locked {
+  color: var(--accent);
+}

@@ -1,0 +1,236 @@
+/* Motion here is painted from lib/clock — no CSS transitions.
+ * Accent used as text/strokes on the dark card goes through
+ * oklch(from var(--accent) max(l, 0.72) c h) so a dark brand accent stays
+ * legible (>= 4.5:1 on --sheet); light accents pass through untouched. */
+.dialWrap {
+  width: 112px;
+  height: 112px;
+  margin: -6px auto 16px;
+  position: relative;
+}
+
+/* Soft accent halo behind the dial */
+.dialWrap::before {
+  content: "";
+  position: absolute;
+  inset: -18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 18%, color-mix(in srgb, var(--accent) 32%, transparent), transparent 62%);
+  pointer-events: none;
+}
+
+.dial {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.face {
+  fill: var(--field);
+  stroke: var(--border);
+  stroke-width: 1.5;
+}
+
+.tick {
+  stroke: var(--text-dim);
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.55;
+}
+
+.lit {
+  stroke: var(--accent);
+  stroke: oklch(from var(--accent) max(l, 0.72) c h);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.spark {
+  fill: var(--accent);
+  fill: oklch(from var(--accent) max(l, 0.72) c h);
+  filter: drop-shadow(0 0 5px var(--accent));
+}
+
+.needle {
+  fill: var(--text);
+}
+
+.hub {
+  fill: var(--sheet-2);
+  stroke: var(--text);
+  stroke-width: 2;
+}
+
+.hubDot {
+  fill: var(--accent);
+}
+
+.kicker {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  /* Matches WonModal's kicker; the left pad offsets the trailing tracking so
+     the word sits optically centred. */
+  padding-left: 0.18em;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+  color: oklch(from var(--accent) max(l, 0.72) c h);
+}
+
+.kicker span {
+  display: inline-block;
+}
+
+.title {
+  margin: 8px 0 12px;
+  font-size: 30px;
+  line-height: 1.08;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+.mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+}
+
+.mask > span {
+  display: inline-block;
+}
+
+.accent {
+  color: var(--accent);
+  color: oklch(from var(--accent) max(l, 0.72) c h);
+  font-style: italic;
+  font-weight: 700;
+}
+
+.note {
+  margin: 0 auto 20px;
+  max-width: 260px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+/* Perforated "next card" ticket — notches cut with the card colour */
+.ticket {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  border-radius: var(--r-sm);
+  border: 1.5px dashed color-mix(in srgb, var(--accent) 45%, var(--border));
+  background: color-mix(in srgb, var(--accent) 7%, var(--field));
+  text-align: left;
+}
+
+.ticket::before,
+.ticket::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  margin-top: -7px;
+  border-radius: 50%;
+  background: var(--sheet);
+}
+
+.ticket::before {
+  left: -8px;
+}
+
+.ticket::after {
+  right: -8px;
+}
+
+.ticketIcon {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--on-accent);
+  background: var(--accent);
+}
+
+.ticketText {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ticketLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.ticketValue {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.stub {
+  flex: none;
+  padding-left: 14px;
+  border-left: 1.5px dashed color-mix(in srgb, var(--accent) 35%, var(--border));
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--accent);
+  color: oklch(from var(--accent) max(l, 0.72) c h);
+}
+
+/* Extra padding (cancelled by negative margin) so the clip mask doesn't cut
+   off the button's focus ring; net spacing is unchanged (2px top, 4px bottom). */
+.doneMask {
+  overflow: hidden;
+  padding: 6px 6px 8px;
+  margin: -4px -6px -4px;
+}
+
+.done:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 3px;
+}
+
+/* Short viewports (small phones, landscape): tighten so the card fits
+   without the overlay clipping it. */
+@media (max-height: 640px) {
+  .dialWrap {
+    width: 84px;
+    height: 84px;
+    margin: -10px auto 10px;
+  }
+
+  .title {
+    margin: 6px 0 8px;
+    font-size: 26px;
+  }
+
+  .note {
+    margin-bottom: 14px;
+  }
+
+  .ticket {
+    margin-bottom: 14px;
+    padding: 10px 14px;
+  }
+}

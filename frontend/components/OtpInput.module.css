@@ -1,0 +1,43 @@
+.row {
+  display: grid;
+  grid-template-columns: repeat(var(--otp-count, 4), 1fr);
+  gap: 12px;
+  width: 100%;
+}
+
+.cell {
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  height: 64px;
+  border-radius: var(--r-sm);
+  background: var(--field);
+  border: 1px solid var(--border-soft);
+  color: var(--text);
+  font-size: 26px;
+  font-weight: 700;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+}
+
+.cell:focus {
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px rgba(247, 165, 59, 0.16);
+}
+
+.filled {
+  background: var(--sheet-2);
+  border-color: #39405a;
+}
+
+.cellError {
+  border-color: #e0566f;
+}
+
+.error {
+  margin: 12px 0 0;
+  font-size: 12.5px;
+  color: #ff8095;
+  text-align: center;
+}

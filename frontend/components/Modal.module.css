@@ -1,0 +1,40 @@
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(4, 5, 8, 0.72);
+  backdrop-filter: blur(6px);
+  animation: fade 0.3s ease both;
+}
+
+.card {
+  width: 100%;
+  max-width: 340px;
+  background: linear-gradient(180deg, var(--sheet-2), var(--sheet));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--r-lg);
+  padding: 30px 26px 26px;
+  text-align: center;
+  box-shadow: 0 30px 70px -24px rgba(0, 0, 0, 0.9);
+  animation: pop 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Motion painted by the caller from lib/clock. */
+.manual {
+  animation: none;
+}
+
+/* Rendered as a SIBLING of .overlay (never nested inside it) — WebKit flattens
+   an element's backdrop-filter together with its descendants' own rendering,
+   which blurred the celebration confetti along with the dimmed background
+   when it lived inside .overlay. As a sibling painted after it, it stays
+   crisp while the backdrop blur still applies only to .overlay's content. */
+.celebration {
+  position: absolute;
+  inset: 0;
+  z-index: 35;
+  pointer-events: none;
+}

@@ -1,0 +1,88 @@
+/* Motion here is painted from lib/clock — no CSS transitions. */
+.badge {
+  width: 88px;
+  height: 88px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  font-size: 32px;
+  background: var(--accent);
+  border: 4px solid #fff;
+}
+
+.prizeImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.kicker {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+}
+
+.kicker span {
+  display: inline-block;
+}
+
+.mask {
+  overflow: hidden;
+  margin: 6px 0 10px;
+}
+
+.prize {
+  margin: 0;
+  font-size: 30px;
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.note {
+  margin: 0 auto 22px;
+  max-width: 250px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+.code {
+  border: 1.5px dashed #3a4054;
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.cell {
+  display: inline-block;
+  width: 0.95em;
+  text-align: center;
+}
+
+.gap {
+  display: inline-block;
+  width: 0.35em;
+}
+
+.doneMask {
+  overflow: hidden;
+  padding: 2px 0 4px;
+}
+
+.done {
+  margin-top: 2px;
+}
