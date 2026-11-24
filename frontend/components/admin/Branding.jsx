@@ -164,10 +164,12 @@ export default function Branding({ settings, onChange, onSave, saving, saved, sa
               key={c}
               className={styles.swatch}
               aria-label={`Use theme color ${c}`}
+              aria-pressed={settings.themeColor === c}
               onClick={() => onChange({ themeColor: c })}
               style={{
                 width: 30, height: 30, borderRadius: 8, background: c,
-                border: settings.themeColor === c ? "2px solid #fff" : "1px solid rgba(255,255,255,0.15)",
+                border: "1px solid rgba(0,0,0,0.12)",
+                boxShadow: settings.themeColor === c ? "0 0 0 2px #fff, 0 0 0 4px var(--bottle)" : "none",
                 cursor: "pointer",
               }}
             />

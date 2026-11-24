@@ -10,7 +10,7 @@ import {
   NAME_MAX_LEN,
   MOBILE_LEN,
   normalizeName,
-  normalizeMobile,
+  cleanMobileInput,
   validateName,
   validateMobile,
 } from "@/lib/validation";
@@ -93,10 +93,9 @@ export default function LeadForm({ loading, error, onSubmit, brandName }) {
           placeholder="00000 00000"
           inputMode="numeric"
           value={mobile}
-          onChange={(e) => setMobile(normalizeMobile(e.target.value))}
+          onChange={(e) => setMobile(cleanMobileInput(e.target.value))}
           onBlur={() => setTouched((t) => ({ ...t, mobile: true }))}
           error={touched.mobile ? mobileError : null}
-          maxLength={MOBILE_LEN}
           autoComplete="tel"
           required
         />

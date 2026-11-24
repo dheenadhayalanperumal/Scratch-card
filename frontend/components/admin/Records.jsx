@@ -77,7 +77,7 @@ function Pager({ paged }) {
       </label>
       <div className={styles.pagerBtns}>
         <button type="button" className={styles.pagerBtn} disabled={page <= 1} onClick={() => setPage(page - 1)} aria-label="Previous page">
-          ← Prev
+          Previous
         </button>
         {pageList(page, pageCount).map((n, i) =>
           n === "…" ? (
@@ -96,7 +96,7 @@ function Pager({ paged }) {
           )
         )}
         <button type="button" className={styles.pagerBtn} disabled={page >= pageCount} onClick={() => setPage(page + 1)} aria-label="Next page">
-          Next →
+          Next
         </button>
       </div>
     </div>

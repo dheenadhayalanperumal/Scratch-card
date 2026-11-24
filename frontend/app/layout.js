@@ -1,4 +1,4 @@
-import { Sora, Plus_Jakarta_Sans, Urbanist } from "next/font/google";
+import { Sora, Plus_Jakarta_Sans, Bricolage_Grotesque, Public_Sans } from "next/font/google";
 import "./globals.css";
 
 const display = Sora({
@@ -15,11 +15,18 @@ const body = Plus_Jakarta_Sans({
   display: "swap",
 });
 
-// Admin-only face (Luma-style admin). Exposed as a variable so the public page
-// keeps Sora / Plus Jakarta and only the admin stylesheet opts in.
-const admin = Urbanist({
+// Admin-only faces. Exposed as variables so the public page keeps
+// Sora / Plus Jakarta and only the admin stylesheet opts in.
+const adminDisplay = Bricolage_Grotesque({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["500", "600", "700", "800"],
+  variable: "--font-admin-display",
+  display: "swap",
+});
+
+const admin = Public_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-admin",
   display: "swap",
 });
@@ -38,7 +45,7 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${display.variable} ${body.variable} ${admin.variable}`}>
+    <html lang="en" className={`${display.variable} ${body.variable} ${admin.variable} ${adminDisplay.variable}`}>
       <body>{children}</body>
     </html>
   );

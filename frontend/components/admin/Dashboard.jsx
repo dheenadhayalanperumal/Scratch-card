@@ -24,7 +24,6 @@ const WA_LABELS = {
   skipped: "—",
 };
 
-const DOTS = 9; // dot-matrix height of the date strip
 
 export default function Dashboard({ users, spins, coupons, segments, onGo }) {
   const wins = spins.filter((s) => s.isWin);
@@ -98,10 +97,10 @@ export default function Dashboard({ users, spins, coupons, segments, onGo }) {
         </div>
       </section>
 
-      {/* Date strip — spins per day as dot columns, today called out */}
+      {/* Plays per day for the last two weeks, today called out */}
       <section className={styles.strip} aria-labelledby="strip-title">
         <div className={styles.stripHead}>
-          <p className={styles.eyebrow} id="strip-title">Plays · last 14 days</p>
+          <p className={styles.eyebrow} id="strip-title">Plays in the last 14 days</p>
           <p className={styles.stripTotal}>
             <CountUp value={days.reduce((a, d) => a + d.n, 0)} />
             <span className={styles.unit}> plays</span>
@@ -133,7 +132,7 @@ export default function Dashboard({ users, spins, coupons, segments, onGo }) {
           ))}
         </div>
 
-        {/* Feature tile — the one lime-filled card, like Luma's "Inner Flow" */}
+        {/* Win-rate stub — styled as a tear-off coupon */}
         <button className={styles.feature} onClick={() => onGo?.("records")}>
           <span className={styles.featureChevron} aria-hidden="true">›</span>
           <span className={styles.featureLabel}>Win rate</span>
@@ -196,7 +195,7 @@ export default function Dashboard({ users, spins, coupons, segments, onGo }) {
         )}
       </section>
 
-      {/* Dark band — rewards, like Luma's "Program" strip */}
+      {/* Rewards — which prizes are being won, and how many get redeemed */}
       <section className={styles.band} aria-labelledby="band-title">
         <div className={styles.bandList}>
           <h3 className={styles.bandTitle} id="band-title">Rewards</h3>
@@ -215,19 +214,7 @@ export default function Dashboard({ users, spins, coupons, segments, onGo }) {
           )}
         </div>
 
-        <div className={styles.bandTiles}>
-          {rewards.slice(0, 3).map(([title, n], i) => (
-            <button key={title} className={styles.glowTile} onClick={() => onGo?.("coupons")} style={{ "--blob": `${30 + i * 22}%` }}>
-              <span className={styles.glowTitle}>{title}</span>
-              <span className={styles.glowSub}>
-                {n} won · {pct(n, wins.length)}%
-              </span>
-              <span className={styles.glowChevron} aria-hidden="true">›</span>
-            </button>
-          ))}
-        </div>
-
-        <Gauge value={pct(redeemed.length, wins.length)} label="Redemption rate" detail={`${redeemed.length} of ${wins.length}`} />
+        <Gauge value={pct(redeemed.length, wins.length)} label="Redemption rate" detail={`${redeemed.length} of ${wins.length} redeemed`} />
       </section>
     </div>
   );
@@ -245,38 +232,33 @@ function GrowBar({ share }) {
   return <span className={styles.barFill} style={{ width: `${share * 100 * easeOutCubic(p)}%` }} />;
 }
 
-/** One day of the strip: date, weekday, and a column of dots filled bottom-up. */
+/** One day of the strip: a bar scaled to the busiest day, then date and weekday. */
 function DayColumn({ day, max, index, isToday }) {
   const p = easeOutCubic(useEntrance(0.6, 0.1 + index * 0.03));
-  const filled = day.n ? Math.max(1, Math.round((day.n / max) * DOTS * p)) : 0;
+  const h = day.n ? Math.max(4, (day.n / max) * 100 * p) : 0;
   return (
     <div className={`${styles.day} ${isToday ? styles.dayToday : ""}`} title={`${day.month} ${day.date}: ${day.n} plays`}>
+      <span className={styles.dots} aria-hidden="true">
+        <i style={{ height: `${h}%` }} />
+        {isToday && <span className={styles.dayBubble}>{day.n}</span>}
+      </span>
       <span className={styles.dayDate}>{day.date}</span>
       <span className={styles.dayWeek}>{isToday ? "today" : day.weekday}</span>
-      <span className={styles.dots} aria-hidden="true">
-        {Array.from({ length: DOTS }, (_, k) => (
-          <i key={k} className={DOTS - k <= filled ? styles.dotOn : undefined} />
-        ))}
-      </span>
-      {isToday && <span className={styles.dayBubble}>{day.n} plays</span>}
     </div>
   );
 }
 
-/** 24-dot row, filled to `share` — the dot-matrix motif used across Luma. */
+/** Thin progress bar filled to `share`. */
 function DotRow({ share }) {
   const p = easeOutCubic(useEntrance(0.9, 0.2));
-  const on = Math.round(24 * share * p);
   return (
     <span className={styles.dotRow} aria-hidden="true">
-      {Array.from({ length: 24 }, (_, i) => (
-        <i key={i} className={i < on ? styles.dotOn : undefined} />
-      ))}
+      <span className={styles.dotOn} style={{ width: `${share * 100 * p}%` }} />
     </span>
   );
 }
 
-/** Thin 240° arc gauge with a needle, like Luma's "Practice rhythm". */
+/** 240° arc gauge showing a percentage. */
 function Gauge({ value, label, detail }) {
   const p = easeOutCubic(useEntrance(1.1, 0.3));
   const R = 62;
@@ -304,7 +286,8 @@ function Gauge({ value, label, detail }) {
       <div className={styles.gaugeLabel}>{label}</div>
       <div className={styles.gaugeValue}>
         {Math.round(value * p)}
-        <span className={styles.unit}>% · {detail}</span>
+        <span className={styles.featureUnit}>%</span>
+        <span className={styles.unit}>{detail}</span>
       </div>
     </div>
   );

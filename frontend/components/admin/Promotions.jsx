@@ -66,7 +66,7 @@ export default function Promotions({ templates, brandName, waEnabled }) {
       )}
 
       <div className={styles.card}>
-        <h3 className={styles.cardTitle}>1 · Choose a message template</h3>
+        <h3 className={styles.cardTitle}>1. Choose a message template</h3>
         <p className={styles.cardDesc}>
           Pick a saved template from the Templates menu. You can tweak the copy below before sending —
           edits here don&rsquo;t change the saved template.
@@ -105,7 +105,7 @@ export default function Promotions({ templates, brandName, waEnabled }) {
       </div>
 
       <div className={styles.card}>
-        <h3 className={styles.cardTitle}>2 · Choose the audience</h3>
+        <h3 className={styles.cardTitle}>2. Choose the audience</h3>
         <p className={styles.cardDesc}>Opt-outs are always excluded.</p>
         <div className={styles.segPick}>
           {SEGMENTS.map((s) => (
@@ -131,7 +131,7 @@ export default function Promotions({ templates, brandName, waEnabled }) {
       </div>
 
       <div className={styles.card}>
-        <h3 className={styles.cardTitle}>3 · Send</h3>
+        <h3 className={styles.cardTitle}>3. Send</h3>
         <div className={styles.actions}>
           <button
             className={styles.btn}

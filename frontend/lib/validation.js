@@ -34,6 +34,20 @@ export function validateName(raw) {
 // a number with a country code ("+91 98765 43210") keeps the right digits.
 export const normalizeMobile = (m) => String(m ?? "").replace(/\D/g, "").slice(-MOBILE_LEN);
 
+/**
+ * Clean what's typed or pasted into a 10-digit mobile field. Drops non-digits,
+ * strips a pasted +91 / 91 country code or 0 trunk prefix, then caps at 10.
+ * Extra keystrokes past 10 are ignored — never shifted in — so a typo can't
+ * silently turn into a different number. Use this for the input's onChange;
+ * normalizeMobile stays the server mirror.
+ */
+export const cleanMobileInput = (raw) => {
+  let d = String(raw ?? "").replace(/\D/g, "");
+  if (d.length === MOBILE_LEN + 2 && d.startsWith("91")) d = d.slice(2);
+  else if (d.length === MOBILE_LEN + 1 && d.startsWith("0")) d = d.slice(1);
+  return d.slice(0, MOBILE_LEN);
+};
+
 /** Returns an error message, or null when the mobile number is acceptable. */
 export function validateMobile(raw) {
   const mobile = normalizeMobile(raw);

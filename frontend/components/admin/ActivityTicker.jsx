@@ -25,12 +25,12 @@ function describe(s) {
   return s.isWin ? (
     <>
       <strong>{who}</strong> won <strong>{s.couponTitle}</strong>
-      <span className={styles.tickerWhen}> · {ago(s.spunAt)}</span>
+      <span className={styles.tickerWhen}>, {ago(s.spunAt)}</span>
     </>
   ) : (
     <>
       <strong>{who}</strong> spun, no win
-      <span className={styles.tickerWhen}> · {ago(s.spunAt)}</span>
+      <span className={styles.tickerWhen}>, {ago(s.spunAt)}</span>
     </>
   );
 }

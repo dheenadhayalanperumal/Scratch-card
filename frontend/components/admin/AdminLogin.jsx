@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { adminApi, setAdminToken } from "@/lib/api";
 import OtpInput from "@/components/OtpInput";
+import { cleanMobileInput, MOBILE_LEN } from "@/lib/validation";
+import Icon from "./Icon";
 import styles from "./admin.module.css";
 
 /**
@@ -27,11 +29,18 @@ export default function AdminLogin({ onLogin }) {
     return () => clearTimeout(t);
   }, [seconds]);
 
-  const digits = mobile.replace(/\D/g, "").slice(-10);
+  const [mobileTouched, setMobileTouched] = useState(false);
+
+  // `mobile` only ever holds up to 10 clean digits (see cleanMobileInput).
+  const digits = mobile;
+  const mobileError =
+    mobileTouched && digits.length > 0 && digits.length < MOBILE_LEN
+      ? `Enter all ${MOBILE_LEN} digits — ${digits.length} entered.`
+      : "";
 
   const sendCode = async (e) => {
     e?.preventDefault();
-    if (busy || digits.length !== 10) return;
+    if (busy || digits.length !== MOBILE_LEN) return;
     setBusy(true);
     setError("");
     try {
@@ -84,17 +93,28 @@ export default function AdminLogin({ onLogin }) {
 
   return (
     <div className={styles.loginWrap}>
+      <div className={styles.loginTicket}>
       <div className={styles.loginCard}>
-        <div className={styles.loginMark} aria-hidden="true">🎡</div>
-        <h1 className={styles.loginTitle}>Admin sign in</h1>
+        <div className={styles.loginStub}>
+          <div className={styles.loginMark} aria-hidden="true">
+            <Icon name="ticket" size={24} />
+          </div>
+          <div>
+            <h1 className={styles.loginTitle}>Staff sign-in</h1>
+            <p className={styles.loginStubSub}>Scratch card admin</p>
+          </div>
+        </div>
+
+        <div className={styles.loginBody}>
         <p className={styles.loginSub}>
           {step === "mobile"
-            ? "Enter your admin mobile number and we'll send you a one-time code."
-            : `Enter the 4-digit code sent to +91 ${mobile}.`}
+            ? "Enter your admin mobile number. We’ll text you a 4‑digit code."
+            : <>Enter the 4‑digit code sent to <strong>+91 {mobile}</strong>.</>}
         </p>
 
         {step === "mobile" ? (
           <form onSubmit={sendCode}>
+            <div className={styles.field}>
             <label className={styles.label} htmlFor="admin-mobile">Mobile number</label>
             <div className={styles.loginMobileRow}>
               <span className={styles.loginPrefix}>+91</span>
@@ -103,21 +123,27 @@ export default function AdminLogin({ onLogin }) {
                 className={styles.input}
                 inputMode="numeric"
                 autoComplete="tel"
-                placeholder="00000 00000"
-                maxLength={13}
+                placeholder="9876543210"
                 value={mobile}
-                onChange={(e) => setMobile(e.target.value.replace(/[^\d\s]/g, ""))}
+                onChange={(e) => setMobile(cleanMobileInput(e.target.value))}
+                onBlur={() => setMobileTouched(true)}
+                aria-invalid={mobileError ? true : undefined}
+                aria-describedby={mobileError ? "admin-mobile-error" : undefined}
                 autoFocus
               />
             </div>
+            {mobileError && <p id="admin-mobile-error" className={styles.fieldError}>{mobileError}</p>}
+            </div>
             {error && <p className={styles.redeemError} role="alert">{error}</p>}
-            <button type="submit" className={`${styles.btn} ${styles.loginBtn}`} disabled={busy || digits.length !== 10}>
-              {busy ? "Sending…" : "Send OTP"}
+            <button type="submit" className={`${styles.btn} ${styles.loginBtn}`} disabled={busy || digits.length !== MOBILE_LEN}>
+              {busy ? "Sending code…" : "Send code"}
             </button>
           </form>
         ) : (
           <form onSubmit={verify}>
-            <OtpInput length={4} value={code} onChange={setCode} error={null} />
+            <div className={styles.loginOtp}>
+              <OtpInput length={4} value={code} onChange={setCode} error={null} />
+            </div>
             {devOtp && (
               <p className={styles.loginDemo}>
                 Demo code: <strong>{devOtp}</strong>
@@ -145,6 +171,8 @@ export default function AdminLogin({ onLogin }) {
             </div>
           </form>
         )}
+        </div>
+      </div>
       </div>
       <p className={styles.loginFoot}>Authorised staff only. Codes expire in 10 minutes.</p>
     </div>
